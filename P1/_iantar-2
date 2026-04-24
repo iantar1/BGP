@@ -1,0 +1,25 @@
+FROM alpine:3.23.4
+
+RUN apk add --no-cache frr iproute2 iputils busybox
+
+
+RUN mkdir -p /run/frr /etc/frr && \
+    addgroup -S frr && adduser -S -G frr frr || true
+
+COPY daemons /etc/frr/daemons
+COPY frr.conf /etc/frr/frr.conf
+
+RUN chown -R frr:frr /run/frr /etc/frr && \
+    chmod 640 /etc/frr/*
+
+# Start FRR properly
+# CMD ["sh", "-c", "\
+# mkdir -p /run/frr && \
+# chown -R frr:frr /run/frr && \
+# /usr/lib/frr/frrinit.sh start && \
+# sleep infinity"]
+
+
+CMD ["sh", "-c", "\
+/usr/lib/frr/frrinit.sh start && \
+exec vtysh"]
