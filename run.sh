@@ -1,1 +1,2 @@
-gns3server
+docker container prune -f
+gns3server 
