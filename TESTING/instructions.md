@@ -81,3 +81,28 @@ ip link set eth0 up
 
 ip addr add 192.168.1.2/24 dev eth0
 ip link set eth0 up
+
+
+
+--------------------------switch-------------------------
+
+<!-- Install bridge support -->
+ip link add br0 type bridge
+
+<!-- Attach interfaces -->
+ip link set eth0 master br0
+ip link set eth1 master br0
+
+<!-- Bring everything up -->
+
+ip link set eth0 up
+ip link set eth1 up
+ip link set br0 up
+
+
+
+------------------------- check that we are using vxlan -------------------------
+
+<!-- Break VXLAN intentionally and ping  -->
+
+ip link set vxlan0 down
