@@ -15,7 +15,7 @@ RUN mkdir -p /run/frr /etc/frr && \
 #     echo "ospfd=yes" >> /etc/frr/daemons
 
 # Copy configs
-# COPY frr1.conf /etc/frr/frr.conf
+COPY frr3.conf /etc/frr/frr.conf
 COPY daemons /etc/frr/daemons
 
 # Permissions
