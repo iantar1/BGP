@@ -1,0 +1,30 @@
+FROM alpine:3.23.4
+
+RUN apk update && apk add --no-cache \
+    frr \
+    iproute2 \
+    iputils \
+    busybox
+
+# Create dirs + user
+RUN mkdir -p /run/frr /etc/frr && \
+    addgroup -S frr && adduser -S -G frr frr || true
+
+# Enable OSPF + zebra
+# RUN echo "zebra=yes" > /etc/frr/daemons && \
+#     echo "ospfd=yes" >> /etc/frr/daemons
+
+# Copy configs
+COPY frr2.conf /etc/frr/frr.conf
+COPY daemons /etc/frr/daemons
+
+# Permissions
+RUN chown -R frr:frr /run/frr /etc/frr && \
+    chmod 775 /run/frr && \
+    chmod 640 /etc/frr/*
+
+# Start FRR at runtime
+# CMD ["sh", "-c", "/usr/lib/frr/frrinit.sh start && tail -f /dev/null"]
+
+# Start FRR automatically
+CMD ["sh", "-c", "/usr/lib/frr/frrinit.sh start; exec sh"]
